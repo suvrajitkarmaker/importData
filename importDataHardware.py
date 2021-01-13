@@ -5,7 +5,8 @@ class Hardware:
     def __init__(self, lowerBound, higherBound, csvFileName, accountList):
         self.lowerBound = lowerBound
         self.higherBound = higherBound
-        self.fieldList = ['Name','sheep_sel_status__c','sheep_ref_relatedBusinessPartner__c','sheep_sel_sourceType__c','external_key__c','sc_external_key','sys_external_key','hard_external_key']
+        self.fieldList = ['Name','sheep_ref_relatedLocation__c','sheep_sel_sourceType__c','external_key__c','sheep_ref_relatedServContract__c','sheep_ref_relatedSystem__c','sheep_ref_relatedHardwaress__c','sheep_txt_parentObjectExternalKey__c','sheep_txt_parentObjectName__c']
+        self.fieldMap = {'sheep_ref_relatedServContract__c':'Service Contract', 'sheep_ref_relatedSystem__c':'System','sheep_ref_relatedHardwaress__c':'Hardware'}
         self.dictList = []
         self.csvFileName = csvFileName
         self.accountList = accountList
@@ -15,6 +16,8 @@ class Hardware:
         lowerBound = self.lowerBound
         higherBound = self.higherBound
 
+        finalParentValue = ''
+        finalParentType = ''
         for acc in self.accountList:
             singleItemMap = {}
             for i in range(lowerBound, higherBound+1):
@@ -25,7 +28,7 @@ class Hardware:
                         value = 'Test Hard '+str(i)
                     elif(filedName == 'sheep_sel_status__c'):
                         value = '導入待ち'
-                    elif(filedName == 'sheep_ref_relatedBusinessPartner__c'):
+                    elif(filedName == 'sheep_ref_relatedLocation__c'):
                         value = acc
                     elif(filedName == 'sheep_sel_sourceType__c'):
                         value = 'Import'
@@ -33,17 +36,23 @@ class Hardware:
                         value = str(i)
                     else:
                         if(parent == 1):
-                            if(filedName == 'sc_external_key'):
+                            if(filedName == 'sheep_ref_relatedServContract__c'):
                                 value = random.randint(lowerBound, higherBound)
+
+                                finalParentValue = value
+                                finalParentType = 'sheep_ref_relatedServContract__c'
                             else:
                                 value = ''
                         elif(parent == 2):
-                            if(filedName == 'sys_external_key'):
+                            if(filedName == 'sheep_ref_relatedSystem__c'):
                                 value = random.randint(lowerBound, higherBound)
+
+                                finalParentValue = value
+                                finalParentType = 'sheep_ref_relatedSystem__c'
                             else:
                                 value = ''
                         elif(parent == 3):
-                            if(filedName == 'hard_external_key'):
+                            if(filedName == 'sheep_ref_relatedHardwaress__c'):
                                 value = random.randint(lowerBound, higherBound)
                                 try:
                                     if(singleItemMap[i]==True):
@@ -52,6 +61,11 @@ class Hardware:
                                     pass
                                 if(value!=''):
                                     singleItemMap[value]=True
+                                
+                                finalParentValue = value
+                                finalParentType = 'sheep_ref_relatedHardwaress__c'
+                                if(finalParentValue==''):
+                                    finalParentType = ''
                             else:
                                 value = ''
 
@@ -60,6 +74,19 @@ class Hardware:
                         self.dictList[i-1][filedName]= value
                     except:
                         self.dictList.append({filedName:value})
+                
+                if(finalParentValue==''):
+                    continue
+
+                try:
+                    self.dictList[i-1]['sheep_txt_parentObjectExternalKey__c']= finalParentValue
+                except:
+                    self.dictList.append({'sheep_txt_parentObjectExternalKey__c':finalParentValue})
+                
+                try:
+                    self.dictList[i-1]['sheep_txt_parentObjectName__c']= self.fieldMap[finalParentType]
+                except:
+                    self.dictList.append({'sheep_txt_parentObjectName__c':self.fieldMap[finalParentType]})
            
             lowerBound = higherBound + 1
             higherBound = 2 * higherBound

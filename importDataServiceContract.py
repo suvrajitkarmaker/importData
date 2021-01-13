@@ -4,7 +4,7 @@ class ServiceContract:
     def __init__(self, lowerBound, higherBound, csvFileName, accountList):
         self.lowerBound = lowerBound
         self.higherBound = higherBound
-        self.fieldList = ['Name','sheep_sel_status__c','sheep_ref_relatedBusinessPartner__c','sheep_sel_sourceType__c','external_key__c']
+        self.fieldList = ['Name','sheep_ref_relatedInstLocation__c','sheep_sel_sourceType__c','external_key__c']
         self.dictList = []
         self. csvFileName = csvFileName
         self.accountList = accountList
@@ -19,7 +19,7 @@ class ServiceContract:
                         value = 'Test Sc '+str(i)
                     elif(filedName == 'sheep_sel_status__c'):
                         value = '導入待ち'
-                    elif(filedName == 'sheep_ref_relatedBusinessPartner__c'):
+                    elif(filedName == 'sheep_ref_relatedInstLocation__c'):
                         value = acc
                     elif(filedName == 'sheep_sel_sourceType__c'):
                         value = 'Import'

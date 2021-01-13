@@ -5,10 +5,9 @@ from importDataSoftware import Software
 from importDataOption import Option
 
 lowerbound = 1
-higherbound = 50
-accountList = ['xxxxx']
-
-sc = ServiceContract(lowerbound, higherbound, 'sheep_obj_servicecontract__c', accountList)
+higherbound = 10
+accountList = ['a015g0000061vNIAAY']
+sc = ServiceContract(lowerbound, higherbound, 'sheep_obj_servicecontract__c', ['a015g0000061vAVAAY'])
 sc.makeData()
 sc.writeCsv()
 
